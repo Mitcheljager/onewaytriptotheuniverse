@@ -5,20 +5,20 @@ import { onKey, onPointerMove } from "./controls"
 import { player, playerVelocityInDirection } from "../stores/player"
 import { scene, canvas } from "../stores/scene"
 import { camera } from "../stores/camera"
-import { shadowGenerator } from "../stores/shadowGenerator"
+import { meshesWithShadows } from "../stores/light"
 
 export function createPlayer() {
   // Create player box for shadows and physics
-  player.set(BABYLON.Mesh.CreateCylinder("player", 1.8, 0.75, 0.75, 10, 1, get(scene)))
+  player.set(BABYLON.Mesh.CreateCapsule("player", { height: 1.8, radius: 0.35, tessellation: 24, subdivisions: 1, capSubdivisions: 12 } , get(scene)))
 
   get(player).layerMask = 0
   get(player).position.y = 1
   get(player).position.z = 4
   get(player).mass = 0.9
-  get(player).rotation = BABYLON.Vector3.Zero()
+  get(player).rotation = new BABYLON.Vector3(0, -3.125, 0)
   get(player).checkCollisions
 
-  get(shadowGenerator).addShadowCaster(get(player))
+  meshesWithShadows.set([...get(meshesWithShadows), get(player)])
 
   // Set Physics body that the camera will be attached to
   get(player).physicsImpostor = new BABYLON.PhysicsImpostor(get(player), BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0.5, restitution: 0, friction: .01 }, get(scene))
@@ -68,4 +68,12 @@ function transformForce(mesh, vector) {
   mesh.rotationQuaternion.toRotationMatrix(matrix)
 
   return BABYLON.Vector3.TransformNormal(vector, matrix)
+}
+
+export function removePlayerEventListeners() {
+  if (!get(canvas)) return
+
+  get(canvas).removeEventListener("pointermove", onPointerMove)
+  get(canvas).removeEventListener("keydown", (event: KeyboardEvent) => onKey(event, 1))
+  get(canvas).removeEventListener("keyup", (event: KeyboardEvent) => onKey(event, 0))
 }
