@@ -3,6 +3,8 @@ import { get, writable } from "svelte/store"
 export let shadowGenerators = writable([])
 export let lights = writable([])
 export let meshesWithShadows = writable([])
+export let staticMeshes = writable([])
+export let glows = writable([])
 
 export function createShadowGenerators() {
   shadowGenerators.set([])
@@ -19,5 +21,11 @@ export function createShadowGenerators() {
     })
 
     shadowGenerators.set([...get(shadowGenerators), shadowGenerator])
+  })
+
+  get(glows).forEach(glow => {
+    get(meshesWithShadows).forEach(mesh => {
+      glow.addIncludedOnlyMesh(mesh)
+    })
   })
 }

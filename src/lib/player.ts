@@ -30,6 +30,8 @@ export function createPlayer() {
   get(canvas).addEventListener("keydown", (event: KeyboardEvent) => onKey(event, 1))
   get(canvas).addEventListener("keyup", (event: KeyboardEvent) => onKey(event, 0))
 
+  get(scene).onDispose = removePlayerEventListeners
+
   get(scene).registerBeforeRender(update)
 }
 
@@ -44,7 +46,7 @@ async function update() {
   if (!get(camera)) return
 
   // player.rotation.y = camera.rotation
-  get(camera).position = get(player).position.add(new BABYLON.Vector3(0, 0.85, 0))
+  get(camera).position = get(player).position.add(new BABYLON.Vector3(0, 0.75, 0))
 
   // Force natural camera to only move in y and move camera with player mesh rotation
   const eulerRotation = BABYLON.Vector3.Zero()
@@ -55,10 +57,10 @@ async function update() {
   get(player).rotationQuaternion.z = 0
 }
 
-function translate(mesh, direction) {
+function translate(mesh, direction, speed = .05) {
   mesh.physicsImpostor.setLinearVelocity(
     mesh.physicsImpostor.getLinearVelocity().add(
-      transformForce(mesh, direction.scale(.1))
+      transformForce(mesh, direction.scale(speed))
     )
   )
 }
