@@ -47,7 +47,7 @@ export function createBox(name: string, size, position, diffuseTexturePath: stri
   }
 }
 
-export function createPlane(name: string, size, position, rotation, diffuseTexturePath: string, bumpTexturePath = "", { textureAxis = ["x", "y"], textureScale = 2, specularColor = new BABYLON.Color3(0.15, 0.15, 0.15) } = {}) {
+export function createPlane(name: string, size, position, rotation, diffuseTexturePath: string, bumpTexturePath = "", { textureAxis = ["x", "y"], textureScale = 2, specularColor = new BABYLON.Color3(0.1, 0.1, 0.1) } = {}) {
   const material = createMaterial(name, diffuseTexturePath, bumpTexturePath, size, textureAxis, textureScale, specularColor)
 
   const mesh = BABYLON.MeshBuilder.CreatePlane(name, { height: size.y, width: size.x, sideOrientation: BABYLON.Mesh.DOUBLESIDE })

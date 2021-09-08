@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 
-import { player, playerVelocityInDirection } from "../stores/player"
+import { player, playerVelocityInDirection, playerLight } from "../stores/player"
 
 export function onPointerMove(event) {
   rotate(get(player), new BABYLON.Vector3(0, event.movementX, 0), 0.015)

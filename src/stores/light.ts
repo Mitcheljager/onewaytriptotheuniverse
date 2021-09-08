@@ -1,7 +1,7 @@
 import { get, writable } from "svelte/store"
 
 export let shadowGenerators = writable([])
-export let lights = writable([])
+export let lightsCastingShadows = writable([])
 export let meshesWithShadows = writable([])
 export let staticMeshes = writable([])
 export let glows = writable([])
@@ -9,7 +9,7 @@ export let glows = writable([])
 export function createShadowGenerators() {
   shadowGenerators.set([])
 
-  get(lights).forEach(light => {
+  get(lightsCastingShadows).forEach(light => {
     const shadowGenerator = new BABYLON.ShadowGenerator(1024, light)
     shadowGenerator.useContactHardeningShadow = true
     shadowGenerator.contactHardeningLightSizeUVRatio = 0.1

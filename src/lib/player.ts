@@ -2,10 +2,12 @@ import { get } from "svelte/store"
 
 import { onKey, onPointerMove } from "./controls"
 
-import { player, playerVelocityInDirection } from "../stores/player"
+import { player, playerVelocityInDirection, playerLight } from "../stores/player"
 import { scene, canvas } from "../stores/scene"
 import { camera } from "../stores/camera"
-import { meshesWithShadows } from "../stores/light"
+import { lightsCastingShadows } from "../stores/light"
+
+let isPlayerLightKeyDown = false
 
 export function createPlayer() {
   // Create player box for shadows and physics
@@ -18,7 +20,7 @@ export function createPlayer() {
   get(player).rotation = new BABYLON.Vector3(0, -3.125, 0)
   get(player).checkCollisions
 
-  meshesWithShadows.set([...get(meshesWithShadows), get(player)])
+  // meshesWithShadows.set([...get(meshesWithShadows), get(player)])
 
   // Set Physics body that the camera will be attached to
   get(player).physicsImpostor = new BABYLON.PhysicsImpostor(get(player), BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0.5, restitution: 0, friction: .01 }, get(scene))
@@ -31,6 +33,8 @@ export function createPlayer() {
   get(canvas).addEventListener("keyup", (event: KeyboardEvent) => onKey(event, 0))
 
   get(scene).onDispose = removePlayerEventListeners
+
+  createPlayerLight()
 
   get(scene).registerBeforeRender(update)
 }
@@ -55,6 +59,11 @@ async function update() {
 
   get(player).rotationQuaternion.x = 0
   get(player).rotationQuaternion.z = 0
+
+  if (!get(playerLight)) return
+
+  get(playerLight).position = get(player).position.add(new BABYLON.Vector3(0, 1, 0))
+  get(playerLight).setDirectionToTarget(get(camera).getFrontPosition(1))
 }
 
 function translate(mesh, direction, speed = .05) {
@@ -78,4 +87,29 @@ export function removePlayerEventListeners() {
   get(canvas).removeEventListener("pointermove", onPointerMove)
   get(canvas).removeEventListener("keydown", (event: KeyboardEvent) => onKey(event, 1))
   get(canvas).removeEventListener("keyup", (event: KeyboardEvent) => onKey(event, 0))
+}
+
+function createPlayerLight() {
+  playerLight.set(new BABYLON.SpotLight("playerLight", get(player).position, new BABYLON.Vector3(0, 0, 1), Math.PI, 50, get(scene)))
+  get(playerLight).diffuse = new BABYLON.Color3(1, 0.9, 0.75)
+  get(playerLight).specular = new BABYLON.Color3(1, 0.9, 0.75)
+  get(playerLight).intensity = 1
+  get(playerLight).range = 20
+  get(playerLight).setEnabled(false)
+
+  get(playerLight).excludeMeshes = [get(player)]
+
+  lightsCastingShadows.set([...get(lightsCastingShadows), get(playerLight)])
+
+  get(canvas).addEventListener("keydown", togglePlayerLight)
+  get(canvas).addEventListener("keyup", () => { isPlayerLightKeyDown = false })
+  
+}
+
+function togglePlayerLight() {
+  if (isPlayerLightKeyDown) return
+
+  isPlayerLightKeyDown = true
+
+  if (event.key == "f") get(playerLight).setEnabled(!get(playerLight).isEnabled())
 }

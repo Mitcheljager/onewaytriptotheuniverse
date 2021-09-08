@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 
 import { scene } from "../stores/scene"
-import { lights, glows } from "../stores/light"
+import { lightsCastingShadows, glows } from "../stores/light"
 
 export function createStandardSkybox() {
   const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 2000 }, get(scene))
@@ -28,7 +28,7 @@ export function createStandardSkybox() {
   sunLight.intensity = 0.75
   sunLight.diffuse = sunColor
   sunLight.specular = sunColor
-  lights.set([...get(lights), sunLight])
+  lightsCastingShadows.set([...get(lightsCastingShadows), sunLight])
 
   // Ambience light that creates an overall lightness, filling in shadows
   const ambienceLight = new BABYLON.HemisphericLight("ambience", new BABYLON.Vector3(0, 30, 0), get(scene))
