@@ -22,8 +22,6 @@ export function createWindow(name: string, size, position, texturePath = "glass.
   window.checkCollisions = true
   window.receiveShadows = true
   window.material = glass
-
-  meshesWithShadows.set([...get(meshesWithShadows), window])
 }
 
 export function createBox(name: string, size, position, diffuseTexturePath: string, bumpTexturePath = "", { rotation = null, mass = 0, textureAxis = ["y", "z"], textureScale = 2, specularColor = new BABYLON.Color3(0.15, 0.15, 0.15) } = {}) {
@@ -42,22 +40,22 @@ export function createBox(name: string, size, position, diffuseTexturePath: stri
 
   meshesWithShadows.set([...get(meshesWithShadows), mesh])
 
-  if (mass == 0) {
-    staticMeshes.set([...get(staticMeshes), mesh])
-  }
+  if (mass == 0) staticMeshes.set([...get(staticMeshes), mesh])
 }
 
-export function createPlane(name: string, size, position, rotation, diffuseTexturePath: string, bumpTexturePath = "", { textureAxis = ["x", "y"], textureScale = 2, specularColor = new BABYLON.Color3(0.1, 0.1, 0.1) } = {}) {
+export function createPlane(name: string, size, position, rotation, diffuseTexturePath: string, bumpTexturePath = "", { textureAxis = ["x", "y"], textureScale = 2, specularColor = new BABYLON.Color3(0.75, 0.75, 0.75), collisionEnabled = true } = {}) {
   const material = createMaterial(name, diffuseTexturePath, bumpTexturePath, size, textureAxis, textureScale, specularColor)
 
   const mesh = BABYLON.MeshBuilder.CreatePlane(name, { height: size.y, width: size.x, sideOrientation: BABYLON.Mesh.DOUBLESIDE })
   mesh.rotation = rotation
   mesh.position = position
   mesh.material = material
-
-  mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 })
-  mesh.checkCollisions = true
   mesh.receiveShadows = true
+
+  if (collisionEnabled) {
+    mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 })
+    mesh.checkCollisions = true
+  }
 
   meshesWithShadows.set([...get(meshesWithShadows), mesh])
   staticMeshes.set([...get(staticMeshes), mesh])

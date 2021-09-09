@@ -44,33 +44,42 @@
     lamp.material = new BABYLON.StandardMaterial("lightGlow", $scene)
     lamp.material.emissiveColor = new BABYLON.Color3(1, 1, 1)
 
+    const lampLight = new BABYLON.SpotLight("lampLight", new BABYLON.Vector3(0, 2, 0), new BABYLON.Vector3(Math.PI / 2, Math.PI / 1.75, 0), 5, 3, $scene)
+    lampLight.intensity = 1.5
+    lampLight.range = 20
+    lampLight.diffuse = new BABYLON.Color3(1, 0.95, 0.95)
+    lampLight.specular = new BABYLON.Color3(1, 0.95, 0.95)
+
     // Physics object
     createBox("box", new BABYLON.Vector3(1, 1, 1), new BABYLON.Vector3(0, .75, 0), "box.gif", "", { textureScale: 1, rotation: new BABYLON.Vector3(0, .75, 0), mass: 0.999 })
     
     // Scene
-    createWindow("window", new BABYLON.Vector3(0.1, 4, 12), new BABYLON.Vector3(-2, 2, 0))
+    createWindow("window", new BABYLON.Vector3(0.1, 4, 12), new BABYLON.Vector3(-1.95, 2, 0))
 
-    createPlane("backWall", new BABYLON.Vector2(4, 4), new BABYLON.Vector3(0, 2, -6), new BABYLON.Vector3(0, 0, 0), "wall_2.gif", "wall_2_normal.gif", { textureAxis: ["y", "x"] })
-    createPlane("wall", new BABYLON.Vector2(4, 12), new BABYLON.Vector3(2, 2, 0), new BABYLON.Vector3(0, Math.PI / 2, Math.PI / 2), "wall_2.gif", "wall_2_normal.gif")
-    createPlane("ceiling", new BABYLON.Vector2(4, 12), new BABYLON.Vector3(0, 4, 0), new BABYLON.Vector3(Math.PI / 2, 0, 0), "ceiling_2.gif", "ceiling_2_normal.gif")
-    createPlane("floor", new BABYLON.Vector2(4, 12), new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(Math.PI / 2, 0, 0), "wall_2.gif", "wall_2_normal.gif")
+    createPlane("backWall", new BABYLON.Vector2(4, 4), new BABYLON.Vector3(0, 2, -6), new BABYLON.Vector3(0, 0, 0), "wall_6.gif", "wall_6_normal.gif", { textureAxis: ["y", "x"] })
+    createPlane("frontWall", new BABYLON.Vector2(4, 4), new BABYLON.Vector3(0, 2, 6), new BABYLON.Vector3(0, 0, 0), "wall_6.gif", "wall_6_normal.gif", { textureAxis: ["y", "x"], collisionEnabled: false })
+    createPlane("wall", new BABYLON.Vector2(4, 12), new BABYLON.Vector3(2, 2, 0), new BABYLON.Vector3(0, Math.PI / 2, Math.PI / 2), "wall_6.gif", "wall_6_normal.gif")
+    createPlane("ceiling", new BABYLON.Vector2(4, 12), new BABYLON.Vector3(0, 4, 0), new BABYLON.Vector3(Math.PI / 2, 0, 0), "wall_6.gif", "wall_6_normal.gif")
+    createPlane("floor", new BABYLON.Vector2(4, 12), new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(Math.PI / 2, 0, 0), "wall_6.gif", "wall_6_normal.gif")
 
     const point = new BABYLON.PointLight("point", new BABYLON.Vector3(0, 3, 4), $scene)
     point.intensity = 0.25
+    point.range = 20
     point.diffuse = new BABYLON.Color3(1, 0.9, 0.75)
     point.specular = new BABYLON.Color3(1, 0.9, 0.75)
 
     const point2 = new BABYLON.PointLight("point2", new BABYLON.Vector3(0, 3, -4), $scene)
     point2.intensity = 0.25
+    point2.range = 20
     point2.diffuse = new BABYLON.Color3(1, 0.9, 0.75)
     point2.specular = new BABYLON.Color3(1, 0.9, 0.75)
 
-    const point3 = new BABYLON.PointLight("point3", new BABYLON.Vector3(0, 3, -3.5), $scene)
-    point3.intensity = 0.2
-    point3.range = 5
-    point3.diffuse = new BABYLON.Color3(0, 1, 1)
-    point3.specular = new BABYLON.Color3(0, 1, 1)
-    point3.includedOnlyMeshes = $staticMeshes
+    // const point3 = new BABYLON.PointLight("point3", new BABYLON.Vector3(0, 3, -3.5), $scene)
+    // point3.intensity = 0.2
+    // point3.range = 5
+    // point3.diffuse = new BABYLON.Color3(0, 1, 1)
+    // point3.specular = new BABYLON.Color3(0, 1, 1)
+    // point3.includedOnlyMeshes = $staticMeshes
   }
 </script>
 

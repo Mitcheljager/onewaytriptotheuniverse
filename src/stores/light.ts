@@ -10,12 +10,8 @@ export function createShadowGenerators() {
   shadowGenerators.set([])
 
   get(lightsCastingShadows).forEach(light => {
-    const shadowGenerator = new BABYLON.ShadowGenerator(1024, light)
-    shadowGenerator.useContactHardeningShadow = true
-    shadowGenerator.contactHardeningLightSizeUVRatio = 0.1
-    shadowGenerator.transparencyShadow = true
-    shadowGenerator.enableSoftTransparentShadow = true
-
+    const shadowGenerator = createShadowGenerator(light)
+    
     get(meshesWithShadows).forEach(mesh => {
       shadowGenerator.addShadowCaster(mesh)
     })
@@ -28,4 +24,13 @@ export function createShadowGenerators() {
       glow.addIncludedOnlyMesh(mesh)
     })
   })
+}
+
+function createShadowGenerator(light) {
+  const shadowGenerator = new BABYLON.ShadowGenerator(2048, light)
+  shadowGenerator.useContactHardeningShadow = true
+  shadowGenerator.contactHardeningLightSizeUVRatio = 0.1
+  shadowGenerator.frustumEdgeFalloff = 1.0
+
+  return shadowGenerator
 }

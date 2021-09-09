@@ -5,7 +5,7 @@ import { onKey, onPointerMove } from "./controls"
 import { player, playerVelocityInDirection, playerLight } from "../stores/player"
 import { scene, canvas } from "../stores/scene"
 import { camera } from "../stores/camera"
-import { lightsCastingShadows } from "../stores/light"
+import { lightsCastingShadows, meshesWithShadows } from "../stores/light"
 
 let isPlayerLightKeyDown = false
 
@@ -20,7 +20,7 @@ export function createPlayer() {
   get(player).rotation = new BABYLON.Vector3(0, -3.125, 0)
   get(player).checkCollisions
 
-  // meshesWithShadows.set([...get(meshesWithShadows), get(player)])
+  meshesWithShadows.set([...get(meshesWithShadows), get(player)])
 
   // Set Physics body that the camera will be attached to
   get(player).physicsImpostor = new BABYLON.PhysicsImpostor(get(player), BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0.5, restitution: 0, friction: .01 }, get(scene))
@@ -93,8 +93,8 @@ function createPlayerLight() {
   playerLight.set(new BABYLON.SpotLight("playerLight", get(player).position, new BABYLON.Vector3(0, 0, 1), Math.PI, 50, get(scene)))
   get(playerLight).diffuse = new BABYLON.Color3(1, 0.9, 0.75)
   get(playerLight).specular = new BABYLON.Color3(1, 0.9, 0.75)
-  get(playerLight).intensity = 1
-  get(playerLight).range = 20
+  get(playerLight).intensity = 0.75
+  get(playerLight).range = 30
   get(playerLight).setEnabled(false)
 
   get(playerLight).excludeMeshes = [get(player)]
